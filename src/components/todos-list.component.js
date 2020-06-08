@@ -9,7 +9,7 @@ const Todo = props => (
         <td>{props.todo.status}</td>
         <td>{props.todo.category}</td>
         <td>
-            <Link to={"/edit/" + props.todo._id}>Edit</Link>
+            <FormDialog old={props.todo} buttonName={"Edit"} AddDialogTitle={"Edit todo Item"} />
         </td>
     </tr>
 )
@@ -53,26 +53,22 @@ export default class TodosList extends Component {
 
     render() {
         return (
-            <div>
-                <h3>Todos List</h3>
+            <div className="container">
 
                 <div className="row" style={{ marginTop: 20 }}>
                     <div className="col-sm-3" >
-                        <div className="AddItem">
-                            <FormDialog buttonName={"+ Add Task"} />
-                        </div>
                         <div className="AddItem mb-2">
-                            <FormDialog buttonName={"+ Add Category"} />
+                            <FormDialog buttonName={"+ Add Task"} AddDialogTitle={"Add todo Item"} />
                         </div>
                         <div className="btn-group-vertical FullWidth">
                             <button type="button" className="btn btn-dark mt-1 mb-1 p-1">All Tasks</button>
-                            <button type="button" className="btn btn-dark mt-1 mb-1 p-1" >Achieved</button>
-                            <button type="button" className="btn btn-dark mt-1 mb-1 p-1">Others</button>
+                            <button type="button" className="btn btn-dark mt-1 mb-1 p-1" >Ongoing</button>
+                            <button type="button" className="btn btn-dark mt-1 mb-1 p-1">Achieved</button>
                         </div>
                     </div>
-                    <div className="col-sm-9">
-                        <table className="table table-striped" >
-                            <thead>
+                    <div className="col-sm-9 TableBg">
+                        <table className="table table-striped table-hover" >
+                            <thead >
                                 <tr>
                                     <th>Todo</th>
                                     <th>Status</th>
@@ -84,7 +80,6 @@ export default class TodosList extends Component {
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         )

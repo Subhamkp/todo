@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import axios from 'axios';
 
 
+
 export default class FormDialog extends Component {
+
     constructor(props) {
         super(props);
         this.handleClickOpen = this.handleClickOpen.bind(this);
@@ -15,16 +16,23 @@ export default class FormDialog extends Component {
         this.onChangeTodoStatus = this.onChangeTodoStatus.bind(this);
         this.onChangeTodoCategory = this.onChangeTodoCategory.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
         this.state = {
             open: false,
             todo: '',
-            status: '',
+            status: 'new',
             category: ''
         }
-
-        console.log(this.state.open);
     }
+
+
+
+    handleChange = (event) => {
+        this.setState({
+            status: event.target.value
+        });
+    };
 
     handleClickOpen = () => {
         this.setState({
@@ -70,8 +78,13 @@ export default class FormDialog extends Component {
             category: this.state.category
         }
 
-        axios.post('https://todoappnewfor.herokuapp.com/todos/add', newTodo)
-            .then(res => console.log(res.data));
+        if (this.props.old) {
+            axios.post('https://todoappnewfor.herokuapp.com/todos/update/' + this.props.old._id, newTodo)
+                .then(res => console.log(res.data));
+        } else {
+            axios.post('https://todoappnewfor.herokuapp.com/todos/add', newTodo)
+                .then(res => console.log(res.data));
+        }
 
         this.setState({
             todo: '',
@@ -81,12 +94,23 @@ export default class FormDialog extends Component {
         })
     }
 
+    componentDidMount() {
+        if (this.props.old) {
+            console.log(this.props.old.category + " worked");
+            this.setState({
+                todo: this.props.old.todo,
+                status: this.props.old.status,
+                category: this.props.old.category,
+            })
+        }
+    }
+
     render() {
         return (
             <div>
                 <button type="button" className="btn btn-primary mt-2" onClick={this.handleClickOpen}>{this.props.buttonName}</button>
                 <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Add Todo Item</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{this.props.AddDialogTitle}</DialogTitle>
                     <DialogContent>
                         <form onSubmit={this.onSubmit}>
                             <div className="form-group">
@@ -114,7 +138,7 @@ export default class FormDialog extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <input type="submit" value="Create Todo" className="btn btn-primary" />
+                                <input type="submit" value="Save" className="btn btn-primary" />
                             </div>
                         </form>
                     </DialogContent>
